@@ -7,10 +7,10 @@ def check_internet_connection():
     try:
         socket.create_connection(("www.google.com", 80))
         print("Интернет-соединение доступно")
+        return True
     except OSError:
         print("Интернет-соединение недоступно")
-
-
+    return False
 
 
 
