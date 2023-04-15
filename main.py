@@ -5,7 +5,7 @@ import socket
 
 def check_internet_connection():
     try:
-        socket.create_connection(("www.google.com", 80))
+        socket.create_connection(('www.google.com', 80))
         print("Интернет-соединение доступно")
         return True
     except OSError:
@@ -13,14 +13,16 @@ def check_internet_connection():
     return False
 
 
+def main(input_keywords):
+    domain_url = 'https://telegra.ph/'
+    search_keywords = translit(input_keywords.lower(), "ru", reversed=True)
+
+    if check_internet_connection():
+        response = requests.get(f'{domain_url}{search_keywords}-01-01')
+        print(response.content)
+
 
 if __name__ == '__main__':
-    # domain_url = 'https://telegra.ph/'
-    #
-    # response = requests.get(domain_url)
-    #
-    # print(response.content)
-    # search_keywords = 'курсы'
-    # search_keywords_translit = translit(search_keywords, "ru", reversed=True)
-    # print(search_keywords_translit)
-    check_internet_connection()
+    main('курсы')
+
+
