@@ -2,6 +2,7 @@ import asyncio
 import aiohttp
 from transliterate import translit
 import socket
+from bs4 import BeautifulSoup
 
 
 def check_internet_connection():
@@ -10,7 +11,7 @@ def check_internet_connection():
         print("Интернет-соединение доступно")
         return True
     except OSError:
-        print("Интернет-соединение недоступно")
+        print("Интернет-соединение недоступно, подключитесь к сети")
     return False
 
 
@@ -31,15 +32,19 @@ async def main(input_keywords, search_words_text='', stop_words_text=''):
         tasks = []
         async with aiohttp.ClientSession() as session:
             for i in range(1, 1 + 1):
-                for j in range(1, 31 + 1):
+                for j in range(4, 4 + 1):
                     monday = str(i).zfill(2)
                     day = str(j).zfill(2)
                     url = f'{domain_url}{search_keywords}-{monday}-{day}'
                     tasks.append(asyncio.create_task(fetch(session, url)))
                     await asyncio.sleep(0.2)
             responses = await asyncio.gather(*tasks)
-
-            print(len(responses))
+            for page in responses:
+                if page:
+                    soup = BeautifulSoup(page, features="html.parser")
+                    link_all = len(soup.find_all('a'))
+                    img_all = len(soup.find_all('img'))
+                    print(f'Кол-во ссылок: {link_all}, кол-во фоток: {img_all}')
 
 
 if __name__ == '__main__':
